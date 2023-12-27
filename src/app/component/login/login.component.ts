@@ -23,7 +23,7 @@ export class LoginComponent {
   login(loginForm: NgForm): void {
     this.loginState$ = this.userService.login$(loginForm.value.email, loginForm.value.password)
     .pipe(map(response => {
-      if(response.data.user.isUsingMfa) {
+      if(response.data.user.usingMfa) {
         this.phoneSubject.next(response.data.user.phone);
         this.emailSubject.next(response.data.user.email);
         return { dataState: DataState.LOADED, isUsingMfa: true, loginSuccess: false,

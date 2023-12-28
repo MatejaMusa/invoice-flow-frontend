@@ -51,9 +51,11 @@ export class LoginComponent {
       this.router.navigate(['/']);
       return {dataState: DataState.LOADED, loginSuccess: true};
     }),
-      startWith({ dataState: DataState.LOADING, isUsingMfa: false}),
+      startWith({ dataState: DataState.LOADING, isUsingMfa: true,
+        phone: this.phoneSubject.value.substring(this.phoneSubject.value.length-4 )}),
       catchError((error: string) => {
-        return of({ dataState: DataState.ERROR, isUsingMfa: false, loginSuccess: false, error})
+        return of({ dataState: DataState.ERROR, isUsingMfa: true, loginSuccess: false, error,
+          phone: this.phoneSubject.value.substring(this.phoneSubject.value.length-4 )})
       })
     )
   }

@@ -39,8 +39,8 @@ export class ProfileComponent implements OnInit{
     this.isLoadingSubject.next(true);
     this.profileState$ = this.userService.update$(profileForm.value)
     .pipe(map(response => {
-      console.log({...response, data: response.data})
-      this.dataSubject.next(response);
+      console.log(response);
+      this.dataSubject.next({...response, data: response.data})
       this.isLoadingSubject.next(false);
       return { dataState: DataState.LOADED, appData: this.dataSubject.value };
     }),
@@ -81,8 +81,8 @@ export class ProfileComponent implements OnInit{
     this.isLoadingSubject.next(true);
     this.profileState$ = this.userService.updateRoles$(roleForm.value.roleName)
     .pipe(map(response => {
-      console.log({...response, data: response.data})
-      this.dataSubject.next(response);
+      console.log(response);
+      this.dataSubject.next({...response, data: response.data})
       this.isLoadingSubject.next(false);
       return { dataState: DataState.LOADED, appData: this.dataSubject.value };
     }),
@@ -98,8 +98,8 @@ export class ProfileComponent implements OnInit{
     this.isLoadingSubject.next(true);
     this.profileState$ = this.userService.updateAccountSettings$(settingsForm.value)
     .pipe(map(response => {
-      console.log({...response, data: response.data})
-      this.dataSubject.next(response);
+      console.log(response);
+      this.dataSubject.next({...response, data: response.data})
       this.isLoadingSubject.next(false);
       return { dataState: DataState.LOADED, appData: this.dataSubject.value };
     }),
@@ -115,8 +115,8 @@ export class ProfileComponent implements OnInit{
     this.isLoadingSubject.next(true);
     this.profileState$ = this.userService.toggleMfa$()
     .pipe(map(response => {
-      console.log({...response, data: response.data})
-      this.dataSubject.next(response);
+      console.log(response);
+      this.dataSubject.next({...response, data: response.data})
       this.isLoadingSubject.next(false);
       return { dataState: DataState.LOADED, appData: this.dataSubject.value };
     }),
@@ -126,5 +126,33 @@ export class ProfileComponent implements OnInit{
         return of({ dataState: DataState.LOADED, appData: this.dataSubject.value, error})
       })
     )
+  }
+
+  updateProfileImage(image: File): void {
+    if(image) {
+      this.isLoadingSubject.next(true);
+      this.profileState$ = this.userService.updateImage$(this.getFormData(image))
+      .pipe(
+        map(response => {
+          console.log(response);
+          this.dataSubject.next({...response,
+             data: { ...response.data,
+               user: {...response.data.user,
+                 imageUrl: `${response.data.user.imageUrl}?time=${new Date().getTime()}` }} })
+          this.isLoadingSubject.next(false);
+          return { dataState: DataState.LOADED, appData: this.dataSubject.value };
+        }),
+        startWith({ dataState: DataState.LOADED, appData: this.dataSubject.value }),
+        catchError((error: string) => {
+          this.isLoadingSubject.next(false);
+          return of({ dataState: DataState.LOADED, appData: this.dataSubject.value, error})
+        })
+      )
+    }
+  }
+  private getFormData(image: File): FormData {
+    const formData = new FormData();
+    formData.append('image', image);
+    return formData;
   }
 }

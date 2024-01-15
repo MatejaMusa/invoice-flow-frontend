@@ -108,6 +108,8 @@ export class UserService {
 
   isAuthenticated = (): boolean => (this.jwtHelper.decodeToken<string>(localStorage.getItem(Key.TOKEN)) && !this.jwtHelper.isTokenExpired(localStorage.getItem(Key.TOKEN))) ? true : false;
 
+  isRefreshTokenValid = (): boolean => (this.jwtHelper.decodeToken<string>(localStorage.getItem(Key.REFRESH_TOKEN)) && !this.jwtHelper.isTokenExpired(localStorage.getItem(Key.REFRESH_TOKEN))) ? true : false;
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.log(error);
     let errorMessage: string;

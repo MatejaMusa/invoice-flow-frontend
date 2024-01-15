@@ -17,8 +17,13 @@ export class AuthenticationGuard {
     if (this.userService.isAuthenticated()) {
         return true;
     } else {
+      if(this.userService.isRefreshTokenValid()) {
+        this.userService.refreshToken$();
+        return true;
+      } else {
         this.router.navigate(['/login']);
         return false;
+      }
     }
   }
 

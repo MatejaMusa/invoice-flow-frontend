@@ -1,10 +1,10 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { CustomHttpResponse, Page, Profile } from '../interface/appstates';
+import { CustomHttpResponse, Page } from '../interface/appstates';
 import { User } from '../interface/user';
-import { Key } from '../enum/key.enum';
+import { Stats } from '../interface/stats';
+import { Customer } from '../interface/customer';
 
 @Injectable({ providedIn: 'root' })
 export class CustomerService {
@@ -12,9 +12,25 @@ export class CustomerService {
 
   constructor(private http: HttpClient) { }
 
-  customers$ = (page: number = 0) => <Observable<CustomHttpResponse<Page & User>>>
+  customers$ = (page: number = 0) => <Observable<CustomHttpResponse<Page & User & Stats>>>
+  this.http.get<CustomHttpResponse<Page & User & Stats>>
+  (`${this.server}/customer/list?page=${page}`)
+  .pipe(
+    tap(console.log),
+    catchError(this.handleError)
+  );
+
+  searchCustomers$ = (name: string = '', page: number = 0) => <Observable<CustomHttpResponse<Page & User>>>
   this.http.get<CustomHttpResponse<Page & User>>
-  (`${this.server}/customer/list?page=${page}`,)
+  (`${this.server}/customer/search?name=${name}&page=${page}`)
+  .pipe(
+    tap(console.log),
+    catchError(this.handleError)
+  );
+
+  newCustomers$ = (customer: Customer) => <Observable<CustomHttpResponse<Customer & User>>>
+  this.http.post<CustomHttpResponse<Customer & User>>
+  (`${this.server}/customer/create`, customer)
   .pipe(
     tap(console.log),
     catchError(this.handleError)

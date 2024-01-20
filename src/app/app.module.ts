@@ -19,7 +19,8 @@ import { TokenInterceptor } from './interceptor/token.interceptor';
 import { NewcustomerComponent } from './component/newcustomer/newcustomer.component';
 import { NewinvoiceComponent } from './component/newinvoice/newinvoice.component';
 import { InvoicesComponent } from './component/invoices/invoices.component';
-import { InvoiceComponent } from './component/invoice/invoice.component'
+import { InvoiceComponent } from './component/invoice/invoice.component';
+import { ExtractvaluePipe } from './pipes/extractvalue.pipe'
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { InvoiceComponent } from './component/invoice/invoice.component'
     NewcustomerComponent,
     NewinvoiceComponent,
     InvoicesComponent,
-    InvoiceComponent
+    InvoiceComponent,
+    ExtractvaluePipe
   ],
   imports: [
     BrowserModule,

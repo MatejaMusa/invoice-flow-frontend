@@ -11,13 +11,14 @@ import { BehaviorSubject, Observable, catchError, switchMap, throwError } from '
 import { Key } from '../enum/key.enum';
 import { UserService } from '../service/user.service';
 import { CustomHttpResponse, Profile } from '../interface/appstates';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   private isTokenRefreshing: boolean = false;
   private refreshTokenSubject: BehaviorSubject<CustomHttpResponse<Profile>> = new BehaviorSubject(null);
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private router: Router) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> | Observable<HttpResponse<unknown>> {
     if(request.url.includes('verify') || request.url.includes('login') || request.url.includes('register') ||
@@ -27,6 +28,9 @@ export class TokenInterceptor implements HttpInterceptor {
     return next.handle(this.addAuthorizationTokenHeader(request, localStorage.getItem(Key.TOKEN)))
     .pipe(
       catchError((error: HttpErrorResponse) => {
+        if(this.userService.isRefreshTokenValid() === false) {
+          this.router.navigate(['/login']);
+        }
         if(error instanceof HttpErrorResponse && error.status === 401 && error.error.reason.includes('expired')) {
           return this.handleRefreshToken(request, next);
         } else {

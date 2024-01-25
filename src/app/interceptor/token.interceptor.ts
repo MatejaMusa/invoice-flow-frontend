@@ -22,16 +22,16 @@ export class TokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> | Observable<HttpResponse<unknown>> {
     if(request.url.includes('verify') || request.url.includes('login') || request.url.includes('register') ||
-      request.url.includes('refresh') || request.url.includes('resetpassword')) {
+      request.url.includes('refresh') || request.url.includes('resetpassword') || request.url.includes('new/password')) {
         return next.handle(request);
     }
     return next.handle(this.addAuthorizationTokenHeader(request, localStorage.getItem(Key.TOKEN)))
     .pipe(
       catchError((error: HttpErrorResponse) => {
-        if(this.userService.isRefreshTokenValid() === false) {
-          this.router.navigate(['/login']);
-        }
         if(error instanceof HttpErrorResponse && error.status === 401 && error.error.reason.includes('expired')) {
+          if(this.userService.isRefreshTokenValid() === false) {
+            this.router.navigate(['/login']);
+          }
           return this.handleRefreshToken(request, next);
         } else {
           return throwError(() => error);

@@ -21,7 +21,6 @@ export class AuthenticationGuard {
         this.userService.refreshToken$();
         return true;
       } else {
-        this.router.navigate(['/login']);
         return false;
       }
     }

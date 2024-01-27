@@ -12,10 +12,10 @@ import { jsPDF as pdf} from 'jspdf';
 
 @Component({
   selector: 'app-invoice',
-  templateUrl: './invoice.component.html',
-  styleUrls: ['./invoice.component.css']
+  templateUrl: './invoice-detail.component.html',
+  styleUrls: ['./invoice-detail.component.css']
 })
-export class InvoiceComponent implements OnInit{
+export class InvoiceDetailComponent implements OnInit{
   invoiceState$: Observable<State<CustomHttpResponse<Customer & Invoice & User>>>;
   private dataSubject = new BehaviorSubject<CustomHttpResponse<Customer & Invoice & User>>(null);
   private isLoadingSubject = new BehaviorSubject<boolean>(false);

@@ -4,6 +4,7 @@ import { NewcustomerComponent } from './newcustomer/newcustomer.component';
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerRoutingModule } from './customer-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { NavBarModule } from '../navbar/navbar.module';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,10 @@ import { SharedModule } from 'src/app/shared/shared.module';
     NewcustomerComponent,
     CustomersComponent
   ],
-  imports: [ SharedModule, CustomerRoutingModule ]
+  imports: [ 
+    SharedModule,
+    CustomerRoutingModule,
+    NavBarModule
+  ]
 })
 export class CustomerModule { }

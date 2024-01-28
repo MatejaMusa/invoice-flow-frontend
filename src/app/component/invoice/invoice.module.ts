@@ -4,6 +4,7 @@ import { InvoiceRoutingModule } from './invoice-routing.module';
 import { InvoicesComponent } from './invoices/invoices.component';
 import { NewinvoiceComponent } from './newinvoice/newinvoice.component';
 import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.component';
+import { NavBarModule } from '../navbar/navbar.module';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,10 @@ import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.componen
     NewinvoiceComponent,
     InvoiceDetailComponent
   ],
-  imports: [ SharedModule, InvoiceRoutingModule ]
+  imports: [ 
+    SharedModule,
+    InvoiceRoutingModule,
+    NavBarModule
+  ]
 })
 export class InvoiceModule { }

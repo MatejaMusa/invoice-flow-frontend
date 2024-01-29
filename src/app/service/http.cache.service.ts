@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/htt
 import { Injectable } from '@angular/core';
 
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class HttpCacheService {
   private httpResponseCache: { [key: string]: HttpResponse<any>} = {};
 

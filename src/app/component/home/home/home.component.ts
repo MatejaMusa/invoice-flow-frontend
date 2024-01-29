@@ -1,5 +1,5 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, catchError, map, of, startWith } from 'rxjs';
 import { DataState } from 'src/app/enum/datastate.enum';
@@ -9,11 +9,13 @@ import { State } from 'src/app/interface/state';
 import { User } from 'src/app/interface/user';
 import { CustomerService } from 'src/app/service/customer.service';
 import { saveAs } from 'file-saver';
+import { NotificationService } from 'src/app/service/notification.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit{
   homeState$: Observable<State<CustomHttpResponse<Page<Customer> & User>>>;
@@ -28,11 +30,12 @@ export class HomeComponent implements OnInit{
   fileStatus$ = this.fileStatusSubject.asObservable();
   readonly DataState  = DataState;
 
-  constructor(private router: Router, private customerService: CustomerService) {}
+  constructor(private router: Router, private customerService: CustomerService, private noficationService: NotificationService) {}
   
   ngOnInit(): void {
     this.homeState$ = this.customerService.customers$()
     .pipe(map(response => {
+      this.noficationService.onDefault(response.message);
       console.log(response)
       this.dataSubject.next(response);
       return { dataState: DataState.LOADED, appData: response };
@@ -47,6 +50,7 @@ export class HomeComponent implements OnInit{
   goToPage(pageNumber?: number): void {
     this.homeState$ = this.customerService.customers$(pageNumber)
     .pipe(map(response => {
+      this.noficationService.onDefault(response.message);
       console.log(response)
       this.dataSubject.next(response);
       this.currentPageSubject.next(pageNumber);
@@ -76,6 +80,7 @@ export class HomeComponent implements OnInit{
     }),
       startWith({ dataState: DataState.LOADED, appData: this.dataSubject.value }),
       catchError((error: string) => {
+        this.noficationService.onError(error);
         return of({ dataState: DataState.LOADED, appData: this.dataSubject.value, error})
       })
     )

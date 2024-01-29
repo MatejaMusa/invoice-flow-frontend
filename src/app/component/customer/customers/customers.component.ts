@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, catchError, map, of, startWith } from 'rxjs';
@@ -8,11 +8,13 @@ import { Customer } from 'src/app/interface/customer';
 import { State } from 'src/app/interface/state';
 import { User } from 'src/app/interface/user';
 import { CustomerService } from 'src/app/service/customer.service';
+import { NotificationService } from 'src/app/service/notification.service';
 
 @Component({
   selector: 'app-customers',
   templateUrl: './customers.component.html',
-  styleUrls: ['./customers.component.css']
+  styleUrls: ['./customers.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomersComponent implements OnInit{
   customersState$: Observable<State<CustomHttpResponse<Page<Customer> & User>>>;
@@ -25,17 +27,19 @@ export class CustomersComponent implements OnInit{
   showLogs$ = this.showLogsSubject.asObservable();
   readonly DataState  = DataState;
 
-  constructor(private router: Router, private customerService: CustomerService) {}
+  constructor(private router: Router, private customerService: CustomerService, private noficationService: NotificationService) {}
   
   ngOnInit(): void {
     this.customersState$ = this.customerService.searchCustomers$()
     .pipe(map(response => {
+      this.noficationService.onDefault(response.message);
       console.log(response)
       this.dataSubject.next(response);
       return { dataState: DataState.LOADED, appData: response };
     }),
       startWith({ dataState: DataState.LOADING }),
       catchError((error: string) => {
+        this.noficationService.onError(error);
         return of({ dataState: DataState.ERROR, error})
       })
     )
@@ -45,12 +49,14 @@ export class CustomersComponent implements OnInit{
     this.currentPageSubject.next(0);
     this.customersState$ = this.customerService.searchCustomers$(searchForm.value.name)
     .pipe(map(response => {
+      this.noficationService.onDefault(response.message);
       console.log(response)
       this.dataSubject.next(response);
       return { dataState: DataState.LOADED, appData: response };
     }),
       startWith({ dataState: DataState.LOADED, appData: this.dataSubject.value }),
       catchError((error: string) => {
+        this.noficationService.onError(error);
         return of({ dataState: DataState.ERROR, error})
       })
     )
@@ -59,6 +65,7 @@ export class CustomersComponent implements OnInit{
   goToPage(pageNumber?: number, name?: string): void {
     this.customersState$ = this.customerService.searchCustomers$(name, pageNumber)
     .pipe(map(response => {
+      this.noficationService.onDefault(response.message);
       console.log(response)
       this.dataSubject.next(response);
       this.currentPageSubject.next(pageNumber);
@@ -66,6 +73,7 @@ export class CustomersComponent implements OnInit{
     }),
       startWith({ dataState: DataState.LOADED, appData: this.dataSubject.value }),
       catchError((error: string) => {
+        this.noficationService.onError(error);
         return of({ dataState: DataState.LOADED, appData: this.dataSubject.value, error})
       })
     )

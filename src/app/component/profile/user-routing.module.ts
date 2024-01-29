@@ -4,7 +4,7 @@ import { AuthenticationGuard } from 'src/app/guard/authentication.guard';
 import { UserComponent } from './user/user.component';
 
 const userRoutes: Routes = [
-    {path: 'profile', component: UserComponent, canActivate: [AuthenticationGuard] }
+    {path: '',children: [{ path: '', component: UserComponent, canActivate: [AuthenticationGuard]}] }
   ];
 
 @NgModule({

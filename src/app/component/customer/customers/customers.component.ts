@@ -33,7 +33,6 @@ export class CustomersComponent implements OnInit{
     this.customersState$ = this.customerService.searchCustomers$()
     .pipe(map(response => {
       this.noficationService.onDefault(response.message);
-      console.log(response)
       this.dataSubject.next(response);
       return { dataState: DataState.LOADED, appData: response };
     }),
@@ -50,7 +49,6 @@ export class CustomersComponent implements OnInit{
     this.customersState$ = this.customerService.searchCustomers$(searchForm.value.name)
     .pipe(map(response => {
       this.noficationService.onDefault(response.message);
-      console.log(response)
       this.dataSubject.next(response);
       return { dataState: DataState.LOADED, appData: response };
     }),
@@ -66,7 +64,6 @@ export class CustomersComponent implements OnInit{
     this.customersState$ = this.customerService.searchCustomers$(name, pageNumber)
     .pipe(map(response => {
       this.noficationService.onDefault(response.message);
-      console.log(response)
       this.dataSubject.next(response);
       this.currentPageSubject.next(pageNumber);
       return { dataState: DataState.LOADED, appData: response };

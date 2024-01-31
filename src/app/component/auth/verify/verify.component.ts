@@ -27,12 +27,10 @@ export class VerifyComponent implements OnInit{
   ngOnInit(): void {
     this.verifyState$ = this.activatedRoute.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        console.log(this.activatedRoute);
         const type: AccountType = this.getAccountType(window.location.href);
         return this.userService.verify$(params.get('key'), type)
         .pipe(map(response => {
           this.noficationService.onDefault(response.message);
-          console.log(response)
           type === 'password' ? this.userSubject.next(response.data.user) : null;
           return { type, title: 'Verified!', dataState: DataState.LOADED, message: response.message, verifySuccess: true };
         }),
@@ -53,7 +51,6 @@ export class VerifyComponent implements OnInit{
                                                           confirmPassword: renewPasswordForm.value.confirmPassword })
         .pipe(map(response => {
           this.noficationService.onDefault(response.message);
-          console.log(response);
           this.isLoadingSubject.next(false);
           return { type: 'account' as AccountType, title: 'Success!', dataState: DataState.LOADED, message: response.message, verifySuccess: true };
         }),

@@ -36,7 +36,6 @@ export class HomeComponent implements OnInit{
     this.homeState$ = this.customerService.customers$()
     .pipe(map(response => {
       this.noficationService.onDefault(response.message);
-      console.log(response)
       this.dataSubject.next(response);
       return { dataState: DataState.LOADED, appData: response };
     }),
@@ -51,7 +50,6 @@ export class HomeComponent implements OnInit{
     this.homeState$ = this.customerService.customers$(pageNumber)
     .pipe(map(response => {
       this.noficationService.onDefault(response.message);
-      console.log(response)
       this.dataSubject.next(response);
       this.currentPageSubject.next(pageNumber);
       return { dataState: DataState.LOADED, appData: response };
@@ -74,7 +72,6 @@ export class HomeComponent implements OnInit{
   report():void {
     this.homeState$ = this.customerService.downloadReport$()
     .pipe(map(response => {
-      console.log(response);
       this.reportProgress(response);
       return { dataState: DataState.LOADED, appData: this.dataSubject.value };
     }),
@@ -92,7 +89,6 @@ export class HomeComponent implements OnInit{
         this.fileStatusSubject.next({ status: 'progress', type: 'Downloading...', percent: Math.round(100 * httpEvent.loaded / httpEvent.total)});
         break;
       case HttpEventType.ResponseHeader:
-        console.log('Got response Headers', httpEvent);
         break;
       case HttpEventType.Response:
         saveAs(new File([<Blob>httpEvent.body], 
@@ -102,7 +98,6 @@ export class HomeComponent implements OnInit{
         this.fileStatusSubject.next(undefined);
         break;
       default:
-        console.log(httpEvent);
         break;    
     }
   }

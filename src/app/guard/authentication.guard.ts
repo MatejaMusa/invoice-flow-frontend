@@ -7,7 +7,7 @@ import { UserService } from '../service/user.service';
 })
 export class AuthenticationGuard {
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService) { }
 
   canActivate(routeSnapShot: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     return this.isAuthenticated();

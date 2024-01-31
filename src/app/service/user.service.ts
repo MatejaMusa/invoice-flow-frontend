@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, catchError, tap, throwError } from 'rxjs';
@@ -17,7 +17,6 @@ export class UserService {
   this.http.post<CustomHttpResponse<Profile>>
   (`${this.server}/user/login`, {email, password})
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -25,7 +24,6 @@ export class UserService {
   this.http.post<CustomHttpResponse<Profile>>
   (`${this.server}/user/register`, user)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -33,7 +31,6 @@ export class UserService {
   this.http.get<CustomHttpResponse<Profile>>
   (`${this.server}/user/resetpassword/${email}`)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -41,7 +38,6 @@ export class UserService {
   this.http.get<CustomHttpResponse<Profile>>
   (`${this.server}/user/verify/code/${email}/${code}`)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -49,7 +45,6 @@ export class UserService {
   this.http.get<CustomHttpResponse<Profile>>
   (`${this.server}/user/verify/${type}/${key}`)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -57,7 +52,6 @@ export class UserService {
   this.http.put<CustomHttpResponse<Profile>>
   (`${this.server}/user/new/password`, form)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -65,7 +59,6 @@ export class UserService {
   this.http.get<CustomHttpResponse<Profile>>
   (`${this.server}/user/profile`)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -73,7 +66,6 @@ export class UserService {
   this.http.patch<CustomHttpResponse<Profile>>
   (`${this.server}/user/update`, user)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -82,7 +74,6 @@ export class UserService {
   (`${this.server}/user/refresh/token`, { headers: {Authorization: `Bearer ${localStorage.getItem(Key.REFRESH_TOKEN)}`}})
   .pipe(
     tap(response => {
-      console.log(response);
       localStorage.removeItem(Key.TOKEN);
       localStorage.removeItem(Key.REFRESH_TOKEN);
       localStorage.setItem(Key.TOKEN, response.data.access_token);
@@ -95,7 +86,6 @@ export class UserService {
   this.http.patch<CustomHttpResponse<Profile>>
   (`${this.server}/user/update/password`,form)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -103,7 +93,6 @@ export class UserService {
   this.http.patch<CustomHttpResponse<Profile>>
   (`${this.server}/user/update/role/${roleName}`,{})
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -111,7 +100,6 @@ export class UserService {
   this.http.patch<CustomHttpResponse<Profile>>
   (`${this.server}/user/update/settings`, settings)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -119,7 +107,6 @@ export class UserService {
   this.http.patch<CustomHttpResponse<Profile>>
   (`${this.server}/user/togglemfa`, {})
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -127,7 +114,6 @@ export class UserService {
   this.http.patch<CustomHttpResponse<Profile>>
   (`${this.server}/user/update/image`, formData)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -141,7 +127,6 @@ export class UserService {
   isRefreshTokenValid = (): boolean => (this.jwtHelper.decodeToken<string>(localStorage.getItem(Key.REFRESH_TOKEN)) && !this.jwtHelper.isTokenExpired(localStorage.getItem(Key.REFRESH_TOKEN))) ? true : false;
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    console.log(error);
     let errorMessage: string;
     if(error.error instanceof ErrorEvent) {
       errorMessage =  `A client error occurred - ${error.error.message}`;
@@ -152,7 +137,6 @@ export class UserService {
         errorMessage = `An error occured - Error status ${error.status}`;
       }
     }
-    console.log(errorMessage);
     return throwError(() => errorMessage);
   }
 }

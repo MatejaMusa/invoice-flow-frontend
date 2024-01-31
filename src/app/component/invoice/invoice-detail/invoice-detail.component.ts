@@ -32,7 +32,6 @@ export class InvoiceDetailComponent implements OnInit{
         return this.customerService.invoice$(+params.get("id"))
         .pipe(map(response => {
           this.noficationService.onDefault(response.message);
-          console.log(response)
           this.dataSubject.next(response);
           return { dataState: DataState.LOADED, appData: response };
         }),

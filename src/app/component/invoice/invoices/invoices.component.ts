@@ -32,7 +32,6 @@ export class InvoicesComponent implements OnInit{
     this.invoicesState$ = this.customerService.invoices$()
     .pipe(map(response => {
       this.noficationService.onDefault(response.message);
-      console.log(response)
       this.dataSubject.next(response);
       return { dataState: DataState.LOADED, appData: response };
     }),
@@ -48,7 +47,6 @@ export class InvoicesComponent implements OnInit{
     this.invoicesState$ = this.customerService.invoices$(pageNumber)
     .pipe(map(response => {
       this.noficationService.onDefault(response.message);
-      console.log(response)
       this.dataSubject.next(response);
       this.currentPageSubject.next(pageNumber);
       return { dataState: DataState.LOADED, appData: response };

@@ -23,7 +23,6 @@ export class ResetpasswordComponent {
       .pipe(
         map(response => {
           this.noficationService.onError(response.message);
-          console.log(response);
           resetPasswordForm.reset();
           return { dataState: DataState.LOADED, resetPasswordSuccess: true, message: response.message };
         }),

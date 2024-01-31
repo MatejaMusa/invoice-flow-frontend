@@ -28,7 +28,6 @@ export class NewinvoiceComponent implements OnInit{
     this.newInvoiceState$ = this.customerService.newinvoice$()
     .pipe(map(response => {
       this.noficationService.onDefault(response.message);
-      console.log(response)
       this.dataSubject.next(response);
       return { dataState: DataState.LOADED, appData: response };
     }),
@@ -46,7 +45,6 @@ export class NewinvoiceComponent implements OnInit{
     this.newInvoiceState$ = this.customerService.createInvoice$(newInvoiceForm.value.customerId, newInvoiceForm.value)
     .pipe(map(response => {
       this.noficationService.onDefault(response.message);
-      console.log(response);
       newInvoiceForm.reset({ status: 'PENDING' });
       this.isLoadingSubject.next(false);
       this.dataSubject.next(response);

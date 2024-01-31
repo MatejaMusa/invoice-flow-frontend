@@ -28,7 +28,6 @@ export class NewcustomerComponent implements OnInit{
     this.newCustomerState$ = this.customerService.customers$()
     .pipe(map(response => {
       this.noficationService.onDefault(response.message);
-      console.log(response)
       this.dataSubject.next(response);
       return { dataState: DataState.LOADED, appData: response };
     }),
@@ -45,7 +44,6 @@ export class NewcustomerComponent implements OnInit{
     this.newCustomerState$ = this.customerService.newCustomers$(newCustomerForm.value)
     .pipe(map(response => {
       this.noficationService.onDefault(response.message);
-      console.log(response);
       newCustomerForm.reset({ type: 'INDIVIDUAL', status: 'ACTIVE' });
       this.isLoadingSubject.next(false);
       return { dataState: DataState.LOADED, appData: this.dataSubject.value };

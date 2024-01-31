@@ -29,7 +29,6 @@ export class CustomerDetailComponent implements OnInit{
         return this.customerService.customer$(+params.get("id"))
         .pipe(map(response => {
           this.noficationService.onDefault(response.message);
-          console.log(response)
           this.dataSubject.next(response);
           return { dataState: DataState.LOADED, appData: response };
         }),
@@ -48,7 +47,6 @@ export class CustomerDetailComponent implements OnInit{
     this.customerState$ = this.customerService.update$(customerForm.value)
       .pipe(map(response => {
         this.noficationService.onDefault(response.message);
-        console.log(response)
         this.dataSubject.next({ ...response, 
           data: { ...response.data, 
             customer: { ...response.data.customer, 

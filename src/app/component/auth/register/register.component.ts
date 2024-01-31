@@ -23,7 +23,6 @@ export class RegisterComponent {
       .pipe(
         map(response => {
           this.notificationService.onDefault(response.message);
-          console.log(response);
           registerForm.reset();
           return { dataState: DataState.LOADED, registerSuccess: true, message: response.message };
         }),

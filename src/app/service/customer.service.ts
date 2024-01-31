@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { CustomHttpResponse, CustomerState, Page } from '../interface/appstates';
 import { User } from '../interface/user';
 import { Stats } from '../interface/stats';
@@ -17,7 +17,6 @@ export class CustomerService {
   this.http.get<CustomHttpResponse<Page<Customer> & User & Stats>>
   (`${this.server}/customer/list?page=${page}`)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -25,7 +24,6 @@ export class CustomerService {
   this.http.get<CustomHttpResponse<CustomerState>>
   (`${this.server}/customer/get/${customerId}`)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -33,7 +31,6 @@ export class CustomerService {
   this.http.put<CustomHttpResponse<CustomerState>>
   (`${this.server}/customer/update`, customer)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -41,7 +38,6 @@ export class CustomerService {
   this.http.get<CustomHttpResponse<Page<Customer> & User>>
   (`${this.server}/customer/search?name=${name}&page=${page}`)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -49,7 +45,6 @@ export class CustomerService {
   this.http.post<CustomHttpResponse<Customer & User>>
   (`${this.server}/customer/create`, customer)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -57,7 +52,6 @@ export class CustomerService {
   this.http.get<CustomHttpResponse<Customer[] & User>>
   (`${this.server}/customer/invoice/new`)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -65,7 +59,6 @@ export class CustomerService {
   this.http.post<CustomHttpResponse<Customer[] & User>>
   (`${this.server}/customer/invoice/addtocustomer/${customerId}`, invoice)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -73,7 +66,6 @@ export class CustomerService {
   this.http.get<CustomHttpResponse<Page<Invoice> & User>>
   (`${this.server}/customer/invoice/list?page=${page}`)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
@@ -81,19 +73,16 @@ export class CustomerService {
   this.http.get<CustomHttpResponse<Customer & Invoice & User>>
   (`${this.server}/customer/invoice/get/${invoiceId}`)
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
   downloadReport$ = () => <Observable<HttpEvent<Blob>>>
   this.http.get(`${this.server}/customer/download/report`, { reportProgress: true, observe: 'events', responseType: 'blob' })
   .pipe(
-    tap(console.log),
     catchError(this.handleError)
   );
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    console.log(error);
     let errorMessage: string;
     if(error.error instanceof ErrorEvent) {
       errorMessage =  `A client error occurred - ${error.error.message}`;
@@ -104,7 +93,6 @@ export class CustomerService {
         errorMessage = `An error occured - Error status ${error.status}`;
       }
     }
-    console.log(errorMessage);
     return throwError(() => errorMessage);
   }
 }
